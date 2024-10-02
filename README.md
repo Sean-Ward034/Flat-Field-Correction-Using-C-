@@ -1,12 +1,10 @@
 # Advanced Flat Field Correction App
 
-![Logo or Banner Image Placeholder](path/to/your/logo_or_banner.png)
-
 ## Overview
 
 The **Advanced Flat Field Correction App** is a Windows Forms application designed to perform flat-field correction on images, particularly beneficial in fields like microscopy, medical imaging, and photography. The application offers a user-friendly interface with advanced features to enhance image quality by correcting uneven illumination and sensor defects.
 
-![Screenshot of Main Interface Placeholder](screenshot1.png)
+![Screenshot of Main Interface Placeholder](Images/screenshot1.png)
 
 ## Features
 
@@ -118,7 +116,7 @@ Where:
     - `Upload Image`, `Apply Correction`, `Edit Correction`, `Save Changes`, `Discard Changes`, `Settings`.
   - **Adjustments Group Box:** Contains sliders for `Exposure`, `Contrast`, and `Brightness`.
 
-![Screenshot of UI Layout Placeholder](screenshot2.png)
+![Screenshot of UI Layout Placeholder](Images/screenshot2.png)
 
 ### Controls and Shortcuts
 
@@ -156,11 +154,13 @@ Where:
    - Adjust **Exposure**, **Contrast**, and **Brightness** as needed.
    - The image updates in real-time to reflect changes.
 
-4. **Save or Discard Changes:**
+![Screenshot of Edit Controls](Images/screenshot5.png)
+
+5. **Save or Discard Changes:**
    - Click **Save Changes** to keep adjustments.
    - Click **Discard Changes** to revert to the unadjusted corrected image.
 
-5. **Settings:**
+6. **Settings:**
    - Click **Settings** to open the settings dialog.
    - Configure image mode, toggle dark mode, and manage GPU settings.
 
@@ -178,7 +178,7 @@ Where:
   - Enable or disable GPU acceleration (planned for future implementation).
   - Select an available GPU from the list if enabled.
 
-![Screenshot of Settings Dialog Placeholder](path/to/your/settings_dialog_screenshot.png)
+![Screenshot of Settings Dialog Placeholder](Images/screenshot4.png)
 
 ## Requirements
 
@@ -246,7 +246,7 @@ Contributions are welcome! Please follow these steps:
 
 ## License
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+This project is licensed under the GNU General Public License v3.0. See the [LICENSE](LICENSE) file for details.
 
 ## Contact
 
