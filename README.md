@@ -41,9 +41,7 @@ The **Advanced Flat Field Correction App** is a Windows Forms application design
 
 Flat-field correction is essential for removing artifacts caused by non-uniform illumination and sensor imperfections. The corrected image is computed using the formula:
 
-$
-I_{\text{corrected}}(x, y) = \frac{I_{\text{raw}}(x, y) - D(x, y)}{\max(B_{\text{mean}} - D_{\text{mean}}, 1)} \times 255
-$
+$I_{\\text{corrected}}(x, y) = \\frac{I_{\\text{raw}}(x, y) - D(x, y)}{\\text{Gain}} \\times 255$
 
 Where:
 
@@ -63,9 +61,7 @@ Where:
 - **Gain Calculation:**
   - Gain is calculated to prevent division by zero:
 
-$
-\text{Gain} = \max(B_{\text{mean}} - D_{\text{mean}}, 1)
-$
+$\\text{Gain} = \\max(B_{\\text{mean}} - D_{\\text{mean}}, 1)$
 
 ### 2. Gaussian Smoothing
 
@@ -73,29 +69,19 @@ Gaussian smoothing is applied to both dark and bright field images to reduce noi
 
 **Kernel Used:**
 
-$
-K = \frac{1}{16} \begin{bmatrix}
-1 & 2 & 1 \\
-2 & 4 & 2 \\
-1 & 2 & 1 \\
-\end{bmatrix}
-$
+$K = \\frac{1}{16} \\begin{bmatrix} 1 & 2 & 1 \\\\ 2 & 4 & 2 \\\\ 1 & 2 & 1 \\end{bmatrix}$
 
 **Convolution Formula:**
 
-$
-I_{\text{smoothed}}(x, y) = \sum_{i=-1}^{1} \sum_{j=-1}^{1} K(i+1, j+1) \cdot I(x+i, y+j)
-$
+$I_{\\text{smoothed}}(x, y) = \\sum_{i=-1}^{1} \\sum_{j=-1}^{1} K(i+1, j+1) \\cdot I(x+i, y+j)$
 
-Where \( I(x+i, y+j) \) is the pixel intensity at the neighboring positions.
+Where $( I(x+i, y+j) )$ is the pixel intensity at the neighboring positions.
 
 ### 3. Image Adjustments
 
 Adjustments for brightness, contrast, and exposure are applied using the following formula:
 
-$
-I_{\text{adjusted}} = \text{Clamp}\left( I_{\text{corrected}} \times (1 + B) \times (1 + C + E), 0, 255 \right)
-$
+$I_{\\text{adjusted}} = \\text{Clamp} \\left( I_{\\text{corrected}} \\times (1 + B) \\times (1 + C + E), 0, 255 \\right)$
 
 Where:
 
