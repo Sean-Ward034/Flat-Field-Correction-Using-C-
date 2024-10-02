@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
+using System.Runtime.InteropServices;
+using Microsoft.Azure.Amqp.Framing;
 
 namespace FlatFieldCorrectionApp
 {
@@ -12,9 +14,64 @@ namespace FlatFieldCorrectionApp
         private Bitmap correctedImage;  // The original corrected image
         private Bitmap editedImage;     // The image that is being edited
 
+        private float zoomFactorObject = 1.0f;
+        private float zoomFactorCorrected = 1.0f;
+
+        // Variables for panning
+        private bool isPanningObject = false;
+        private Point panStartPointObject = new Point();
+
+        private bool isPanningCorrected = false;
+        private Point panStartPointCorrected = new Point();
+
         public Form1()
         {
             InitializeComponent();
+            this.Load += Form1_Load; // Attach Form Load event
+
+            // Enable mouse wheel events for zooming
+            this.panelObjectImage.MouseWheel += PanelObjectImage_MouseWheel;
+            this.panelCorrectedImage.MouseWheel += PanelCorrectedImage_MouseWheel;
+
+            // Ensure the panels have focus to receive mouse wheel events
+            this.panelObjectImage.MouseEnter += (s, e) => panelObjectImage.Focus();
+            this.panelCorrectedImage.MouseEnter += (s, e) => panelCorrectedImage.Focus();
+
+            // Handle form resizing for dynamic GUI sizing
+            this.Resize += Form1_Resize;
+
+            // Attach mouse events for panning
+            pictureBoxObject.MouseDown += PictureBoxObject_MouseDown;
+            pictureBoxObject.MouseMove += PictureBoxObject_MouseMove;
+            pictureBoxObject.MouseUp += PictureBoxObject_MouseUp;
+
+            pictureBoxCorrected.MouseDown += PictureBoxCorrected_MouseDown;
+            pictureBoxCorrected.MouseMove += PictureBoxCorrected_MouseMove;
+            pictureBoxCorrected.MouseUp += PictureBoxCorrected_MouseUp;
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            ApplyTheme(); // Apply the theme on form load
+        }
+
+        private void Form1_Resize(object sender, EventArgs e)
+        {
+            // Adjust panel sizes when the form is resized
+            AdjustLayout();
+        }
+
+        private void AdjustLayout()
+        {
+            int padding = 24; // Adjust as needed
+            int halfWidth = (this.ClientSize.Width - padding) / 2;
+            int panelHeight = this.ClientSize.Height - panelControls.Height - padding;
+
+            panelObjectImage.Location = new Point(12, 30);
+            panelObjectImage.Size = new Size(halfWidth, panelHeight);
+
+            panelCorrectedImage.Location = new Point(panelObjectImage.Right + 12, 30);
+            panelCorrectedImage.Size = new Size(halfWidth, panelHeight);
         }
 
         private void btnUpload_Click(object sender, EventArgs e)
@@ -26,6 +83,10 @@ namespace FlatFieldCorrectionApp
                 {
                     objectImage = new Bitmap(openFileDialog.FileName);
                     pictureBoxObject.Image = objectImage;
+
+                    // Reset zoom factor and apply zoom
+                    zoomFactorObject = 1.0f;
+                    ApplyZoom(pictureBoxObject, zoomFactorObject);
 
                     GenerateCalibrationImages(objectImage);
 
@@ -45,6 +106,10 @@ namespace FlatFieldCorrectionApp
             // Apply flat-field correction
             correctedImage = ApplyFlatFieldCorrection(objectImage, darkFrameImage, brightFrameImage);
             pictureBoxCorrected.Image = correctedImage;
+
+            // Reset zoom factor and apply zoom
+            zoomFactorCorrected = 1.0f;
+            ApplyZoom(pictureBoxCorrected, zoomFactorCorrected);
 
             // Enable the "Edit Correction" button
             btnEditCorrection.Enabled = true;
@@ -202,6 +267,33 @@ namespace FlatFieldCorrectionApp
 
         private Bitmap ApplyFlatFieldCorrection(Bitmap rawImage, Bitmap darkFrame, Bitmap brightFrame)
         {
+            string selectedMode = FlatFieldCorrection.Properties.Settings.Default.SelectedMode;
+            bool enableGPU = FlatFieldCorrection.Properties.Settings.Default.EnableGPU;
+            string selectedGPU = FlatFieldCorrection.Properties.Settings.Default.SelectedGPU;
+
+            if (enableGPU && !string.IsNullOrEmpty(selectedGPU))
+            {
+                // Attempt to use GPU acceleration
+                try
+                {
+                    // Implement your GPU-accelerated flat field correction here
+                    // Placeholder: Show a message indicating GPU usage
+                    MessageBox.Show("GPU acceleration is enabled, but GPU processing is not implemented yet.");
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("An error occurred during GPU processing: " + ex.Message);
+                    // Fallback to CPU processing
+                    return ApplyFlatFieldCorrectionCPU(rawImage, darkFrame, brightFrame, selectedMode);
+                }
+            }
+
+            // Use CPU processing
+            return ApplyFlatFieldCorrectionCPU(rawImage, darkFrame, brightFrame, selectedMode);
+        }
+
+        private Bitmap ApplyFlatFieldCorrectionCPU(Bitmap rawImage, Bitmap darkFrame, Bitmap brightFrame, string selectedMode)
+        {
             int width = rawImage.Width;
             int height = rawImage.Height;
             Bitmap correctedImage = new Bitmap(width, height);
@@ -216,11 +308,28 @@ namespace FlatFieldCorrectionApp
                 {
                     Color rawPixel = rawImage.GetPixel(x, y);
                     Color darkPixel = darkFrame.GetPixel(x, y);
-                    Color brightPixel = brightFrame.GetPixel(x, y);
 
-                    int correctedR = (int)(((rawPixel.R - darkPixel.R) / gain) * 255);
-                    int correctedG = (int)(((rawPixel.G - darkPixel.G) / gain) * 255);
-                    int correctedB = (int)(((rawPixel.B - darkPixel.B) / gain) * 255);
+                    int correctedR = 0, correctedG = 0, correctedB = 0;
+
+                    switch (selectedMode)
+                    {
+                        case "Color":
+                            // Handle color images
+                            correctedR = (int)(((rawPixel.R - darkPixel.R) / gain) * 255);
+                            correctedG = (int)(((rawPixel.G - darkPixel.G) / gain) * 255);
+                            correctedB = (int)(((rawPixel.B - darkPixel.B) / gain) * 255);
+                            break;
+
+                        case "Infrared":
+                        case "X-Ray":
+                        default:
+                            // Process as grayscale
+                            int rawIntensity = (rawPixel.R + rawPixel.G + rawPixel.B) / 3;
+                            int darkIntensity = (darkPixel.R + darkPixel.G + darkPixel.B) / 3;
+                            int correctedIntensity = (int)(((rawIntensity - darkIntensity) / gain) * 255);
+                            correctedR = correctedG = correctedB = correctedIntensity;
+                            break;
+                    }
 
                     correctedImage.SetPixel(x, y, Color.FromArgb(
                         Clamp(correctedR, 0, 255),
@@ -289,6 +398,155 @@ namespace FlatFieldCorrectionApp
         private int Clamp(int value, int min, int max)
         {
             return value < min ? min : value > max ? max : value;
+        }
+
+        private void btnSettings_Click(object sender, EventArgs e)
+        {
+            SettingsForm settingsForm = new SettingsForm();
+            settingsForm.ShowDialog();
+        }
+
+        public void ApplyTheme()
+        {
+            bool darkMode = FlatFieldCorrection.Properties.Settings.Default.DarkMode;
+            Color backColor = darkMode ? Color.FromArgb(30, 30, 30) : SystemColors.Control;
+            Color foreColor = darkMode ? Color.White : SystemColors.ControlText;
+
+            this.BackColor = backColor;
+            this.ForeColor = foreColor;
+
+            foreach (Control control in this.Controls)
+            {
+                ApplyThemeToControl(control, backColor, foreColor);
+            }
+        }
+
+        private void ApplyThemeToControl(Control control, Color backColor, Color foreColor)
+        {
+            control.BackColor = backColor;
+            control.ForeColor = foreColor;
+
+            // Apply recursively to child controls
+            foreach (Control child in control.Controls)
+            {
+                ApplyThemeToControl(child, backColor, foreColor);
+            }
+        }
+
+        // Zooming functionality
+        private void PanelObjectImage_MouseWheel(object sender, MouseEventArgs e)
+        {
+            if (ModifierKeys.HasFlag(Keys.Control))
+            {
+                // Zoom in or out
+                if (e.Delta > 0)
+                {
+                    zoomFactorObject *= 1.1f;
+                }
+                else if (e.Delta < 0)
+                {
+                    zoomFactorObject /= 1.1f;
+                }
+                ApplyZoom(pictureBoxObject, zoomFactorObject);
+            }
+            else
+            {
+                // Scroll the panel vertically
+                panelObjectImage.VerticalScroll.Value = Math.Max(0, Math.Min(panelObjectImage.VerticalScroll.Maximum, panelObjectImage.VerticalScroll.Value - e.Delta));
+                panelObjectImage.PerformLayout();
+            }
+        }
+
+        private void PanelCorrectedImage_MouseWheel(object sender, MouseEventArgs e)
+        {
+            if (ModifierKeys.HasFlag(Keys.Control))
+            {
+                // Zoom in or out
+                if (e.Delta > 0)
+                {
+                    zoomFactorCorrected *= 1.1f;
+                }
+                else if (e.Delta < 0)
+                {
+                    zoomFactorCorrected /= 1.1f;
+                }
+                ApplyZoom(pictureBoxCorrected, zoomFactorCorrected);
+            }
+            else
+            {
+                // Scroll the panel vertically
+                panelCorrectedImage.VerticalScroll.Value = Math.Max(0, Math.Min(panelCorrectedImage.VerticalScroll.Maximum, panelCorrectedImage.VerticalScroll.Value - e.Delta));
+                panelCorrectedImage.PerformLayout();
+            }
+        }
+
+        private void ApplyZoom(PictureBox pictureBox, float zoomFactor)
+        {
+            if (pictureBox.Image == null) return;
+
+            pictureBox.SuspendLayout();
+
+            pictureBox.Width = (int)(pictureBox.Image.Width * zoomFactor);
+            pictureBox.Height = (int)(pictureBox.Image.Height * zoomFactor);
+
+            pictureBox.ResumeLayout();
+        }
+
+        // Panning functionality
+        private void PictureBoxObject_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                isPanningObject = true;
+                panStartPointObject = e.Location;
+                Cursor = Cursors.Hand;
+            }
+        }
+
+        private void PictureBoxObject_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (isPanningObject)
+            {
+                Point delta = new Point(e.Location.X - panStartPointObject.X, e.Location.Y - panStartPointObject.Y);
+                panelObjectImage.AutoScrollPosition = new Point(-panelObjectImage.AutoScrollPosition.X - delta.X, -panelObjectImage.AutoScrollPosition.Y - delta.Y);
+            }
+        }
+
+        private void PictureBoxObject_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                isPanningObject = false;
+                Cursor = Cursors.Default;
+            }
+        }
+
+        private void PictureBoxCorrected_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                isPanningCorrected = true;
+                panStartPointCorrected = e.Location;
+                Cursor = Cursors.Hand;
+            }
+        }
+
+        private void PictureBoxCorrected_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (isPanningCorrected)
+            {
+                Point delta = new Point(e.Location.X - panStartPointCorrected.X, e.Location.Y - panStartPointCorrected.Y);
+                panelCorrectedImage.AutoScrollPosition = new Point(-panelCorrectedImage.AutoScrollPosition.X - delta.X, -panelCorrectedImage.AutoScrollPosition.Y - delta.Y);
+            }
+        }
+
+        private void PictureBoxCorrected_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                isPanningCorrected = false;
+                Cursor = Cursors.Default;
+            }
         }
     }
 }
