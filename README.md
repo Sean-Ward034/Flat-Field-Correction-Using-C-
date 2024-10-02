@@ -1,4 +1,3 @@
-+++markdown
 # Advanced Flat Field Correction App
 
 ## Overview
@@ -69,13 +68,14 @@ Gaussian smoothing is applied to both dark and bright field images to reduce noi
 
 **Kernel Used:**
 
-$'K = \\frac{1}{16}$$\[
- \begin{matrix}
+$$
+K = \frac{1}{16} \cdot
+\begin{bmatrix}
   1 & 2 & 1 \\
   2 & 4 & 2 \\
   1 & 2 & 1
- \end{matrix}
-\]$$'$
+\end{bmatrix}
+$$
 
 **Convolution Formula:**
 
@@ -253,4 +253,3 @@ For questions or support, please open an issue on GitHub or contact the maintain
 Note:** This application is a work in progress. Some features, like GPU acceleration, are planned for future releases.
 
 ---
-+++
