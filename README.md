@@ -1,147 +1,259 @@
-# **Advanced Flat Field Correction Application**
+# Advanced Flat Field Correction App
 
-## **Project Overview**
+![Logo or Banner Image Placeholder](path/to/your/logo_or_banner.png)
 
-This project is a C# Windows Forms application that implements an advanced flat field correction algorithm to process and correct non-uniform images. The application simulates a dark frame and bright field images based on the uploaded object image, making it easier for users to perform flat field correction without requiring additional calibration images. Users can now manually fine-tune image properties like brightness, contrast, and exposure using interactive sliders.
+## Overview
 
-### **Features:**
-1. **Automatic Dark and Bright Field Generation**: 
-   - Generates dark and bright field calibration images automatically based on the uploaded object image.
-   
-2. **Advanced Flat Field Correction Algorithm**:
-   - Implements gain and offset adjustments based on mean intensity calculations.
-   
-3. **Gaussian Smoothing for Noise Reduction**:
-   - Applies Gaussian smoothing to the dark and bright field images to reduce noise and improve correction quality.
+The **Advanced Flat Field Correction App** is a Windows Forms application designed to perform flat-field correction on images, particularly beneficial in fields like microscopy, medical imaging, and photography. The application offers a user-friendly interface with advanced features to enhance image quality by correcting uneven illumination and sensor defects.
 
-4. **Interactive User Interface**:
-   - A simple and intuitive UI for uploading images, applying corrections, and visualizing results side-by-side.
+![Screenshot of Main Interface Placeholder](screenshot1.png)
 
-5. **Manual Image Adjustment**:
-   - Users can manually adjust brightness, contrast, and exposure using sliders after the initial correction has been applied.
+## Features
 
-6. **Save or Discard Changes**:
-   - Once manual adjustments are complete, users can either save the changes or discard them, reverting to the originally corrected image.
+- **Image Upload and Display:**
+  - Upload images in common formats (`.bmp`, `.jpg`, `.jpeg`, `.png`).
+  - Display original and corrected images side by side with support for large images.
 
-## **How It Works**
+- **Flat-Field Correction:**
+  - Automatically generates dark and bright field images.
+  - Applies flat-field correction using advanced algorithms.
 
-### **1. Flat Field Correction Theory**
+- **Image Editing:**
+  - Adjust brightness, contrast, and exposure of the corrected image.
+  - Real-time preview of adjustments.
+  - Save or discard changes.
 
-Flat field correction is a technique used in imaging to correct for non-uniformities in the captured image, which arise due to variations in the sensor's response and the illumination setup. These non-uniformities can cause shadows, gradients, and noise in the image, affecting the quality and accuracy of the data. Flat field correction works by compensating for these artifacts using two calibration images:
+- **User Interface Enhancements:**
+  - **Scrolling and Zooming:**
+    - Scroll through images using mouse wheel or touchpad gestures.
+    - Zoom in/out with `CTRL + Mouse Wheel` or touchpad pinch gestures.
+  - **Panning:**
+    - Click and drag to move images within their panels.
+  - **Dynamic GUI Resizing:**
+    - Responsive layout that adjusts to different screen sizes.
+  - **Settings:**
+    - Select image mode (`Color`, `Infrared`, `X-Ray`).
+    - Toggle dark mode theme.
+    - Manage GPU settings for future acceleration support.
 
-- **Dark Frame**: Captures the sensor's noise and imperfections in the absence of light (e.g., with the camera shutter closed).
-- **Bright Field**: Captures the sensor's response under uniform illumination.
+## Algorithms and Formulas Used
 
-The flat field correction formula is typically defined as:
+### 1. Flat-Field Correction
 
-```
-Corrected Image = ((R - D) / (F - D)) * G
-```
+Flat-field correction is essential for removing artifacts caused by non-uniform illumination and sensor imperfections. The corrected image is computed using the formula:
+
+\[
+I_{\text{corrected}}(x, y) = \frac{I_{\text{raw}}(x, y) - D(x, y)}{\max(B_{\text{mean}} - D_{\text{mean}}, 1)} \times 255
+\]
 
 Where:
-- `R` is the raw image (object image).
-- `D` is the dark frame image.
-- `F` is the bright field image.
-- `G` is a gain factor, typically set to the maximum pixel intensity (e.g., 255).
 
-This formula ensures that pixel values are normalized based on the sensor's noise and illumination variations, resulting in a more uniform and accurate image.
+- \( I_{\text{raw}}(x, y) \) is the raw image pixel intensity at position \( (x, y) \).
+- \( D(x, y) \) is the dark field image pixel intensity.
+- \( B_{\text{mean}} \) and \( D_{\text{mean}} \) are the mean intensities of the bright and dark field images, respectively.
+- \( 255 \) scales the corrected intensity back to the 8-bit image range.
 
-### **2. How This Application Implements Flat Field Correction**
+**Implementation Details:**
 
-This application automatically generates the dark and bright field images using the uploaded object image and performs flat field correction based on the following steps:
+- **Dark Field Image Generation:**
+  - Simulated by reducing the brightness of the original image by 80%.
 
-1. **Object Image Upload**:
-   - The user uploads the image they want to correct. This image is displayed in the left picture box of the UI.
-   
-2. **Automatic Dark and Bright Field Generation**:
-   - A **Dark Frame** is generated by reducing the brightness of each pixel in the object image by 80%, simulating a low-light or noise-only scenario.
-   - A **Bright Field** is generated by increasing the brightness of each pixel in the object image by 50%, simulating a uniformly lit image.
+- **Bright Field Image Generation:**
+  - Simulated by increasing the brightness of the original image by 50%.
 
-3. **Smoothing and Preprocessing**:
-   - Gaussian smoothing is applied to both dark and bright field images to minimize noise and improve correction quality.
+- **Gain Calculation:**
+  - Gain is calculated to prevent division by zero:
+    \[
+    \text{Gain} = \max(B_{\text{mean}} - D_{\text{mean}}, 1)
+    \]
 
-4. **Flat Field Correction Algorithm**:
-   - The algorithm calculates the mean intensity of both the dark and bright field images.
-   - Gain and offset adjustments are computed using these mean intensities.
-   - Each pixel in the object image is corrected based on the calculated gain, offset, and the formula mentioned earlier.
+### 2. Gaussian Smoothing
 
-5. **Manual Image Adjustments**:
-   - Once the correction is applied, the user can further fine-tune the image using interactive sliders for **brightness**, **contrast**, and **exposure**.
-   - Changes can be previewed in real-time.
+Gaussian smoothing is applied to both dark and bright field images to reduce noise and smooth out variations.
 
-6. **Save or Discard Changes**:
-   - After adjusting the image, users can either save their changes, which will update the corrected image, or discard changes to revert to the original correction.
+**Kernel Used:**
 
-7. **Visualization**:
-   - The corrected image is displayed in the right picture box, allowing the user to compare the results.
+\[
+K = \frac{1}{16} \begin{bmatrix}
+1 & 2 & 1 \\
+2 & 4 & 2 \\
+1 & 2 & 1 \\
+\end{bmatrix}
+\]
 
-## **File Structure**
+**Convolution Formula:**
 
-The repository contains the following main files:
+\[
+I_{\text{smoothed}}(x, y) = \sum_{i=-1}^{1} \sum_{j=-1}^{1} K(i+1, j+1) \cdot I(x+i, y+j)
+\]
 
-- **`Form1.cs`**: Contains the main logic for image upload, flat field correction, manual adjustments, and UI updates.
-- **`Program.cs`**: Entry point for the application.
-- **`Form1.Designer.cs`**: UI component definitions for the Windows Forms application.
-- **`README.md`**: Documentation file (this file).
+Where \( I(x+i, y+j) \) is the pixel intensity at the neighboring positions.
 
-## **How to Run the Application**
+### 3. Image Adjustments
 
-### **Requirements:**
-- **.NET Framework 4.7.2** or higher (if using .NET Framework)
-- **Visual Studio** (recommended IDE)
+Adjustments for brightness, contrast, and exposure are applied using the following formula:
 
-### **Steps:**
-1. Clone the repository or download the project files.
-2. Open the solution (`.sln`) file in Visual Studio.
-3. Build the solution (`Build` > `Build Solution`).
-4. Run the application (`Start` or `F5`).
-5. Use the **Upload Image** button to select the object image.
-6. Click **Apply Correction** to view the corrected image.
-7. Click **Edit Correction** to enable manual adjustments.
-8. Use the sliders to adjust brightness, contrast, and exposure.
-9. Click **Save Changes** or **Discard Changes** to finalize your adjustments.
+\[
+I_{\text{adjusted}} = \text{Clamp}\left( I_{\text{corrected}} \times (1 + B) \times (1 + C + E), 0, 255 \right)
+\]
 
-### **Creating the Executable (.exe) File:**
-1. Set the build configuration to `Release` in Visual Studio.
-2. Build the project (`Build` > `Build Solution`).
-3. Navigate to the `bin\Release\` directory to find the `FlatFieldCorrectionApp.exe` file.
+Where:
 
-## **Technical Details**
+- \( I_{\text{corrected}} \) is the corrected image pixel intensity.
+- \( B \) is the brightness adjustment factor (\( \frac{\text{Brightness Value}}{100} \)).
+- \( C \) is the contrast adjustment factor (\( \frac{\text{Contrast Value}}{100} \)).
+- \( E \) is the exposure adjustment factor (\( \frac{\text{Exposure Value}}{100} \)).
+- \( \text{Clamp} \) function ensures the intensity stays within the valid range [0, 255].
 
-### **1. Dark and Bright Field Generation**
-- The application simulates the dark and bright fields using static brightness adjustments:
-  - **Dark Field**: Brightness reduced by 80%.
-  - **Bright Field**: Brightness increased by 50%.
-  
-This simulation is effective for basic flat field correction but may not capture all real-world nuances of a dark and bright field.
+## User Interface
 
-### **2. Manual Adjustments**
-- Users can manually adjust **brightness**, **contrast**, and **exposure** after the initial correction using sliders.
-- The changes can be previewed in real-time.
+### Layout
 
-### **3. Save or Discard Changes**
-- The manual changes can be saved to update the corrected image, or discarded to restore the original corrected version.
+- **Top Section:**
+  - **Left Panel:** Displays the original image.
+  - **Right Panel:** Displays the corrected image.
 
-## **Sources and Citations**
+- **Bottom Control Panel:**
+  - **Buttons:** Located at the top of the control panel for easy access.
+    - `Upload Image`, `Apply Correction`, `Edit Correction`, `Save Changes`, `Discard Changes`, `Settings`.
+  - **Adjustments Group Box:** Contains sliders for `Exposure`, `Contrast`, and `Brightness`.
 
-1. **Wikipedia**:
-   - Flat Field Correction Theory: [Flat Field Correction - Wikipedia](https://en.wikipedia.org/wiki/Flat-field_correction).
-   
-2. **Adimec**:
-   - In-Field Calibrations for Machine Vision: [Adimec Resource on Flat Field Correction](https://www.adimec.com/in-field-calibrations-for-optimal-machine-vision-image-accuracy).
+![Screenshot of UI Layout Placeholder](screenshot2.png)
 
-3. **MathWorks**:
-   - Advanced Image Processing Techniques: [MathWorks Guide](https://www.mathworks.com/help/images/flat-field-correction.html).
+### Controls and Shortcuts
 
-## **Future Enhancements**
+- **Zooming:**
+  - **With Mouse:** Hold `CTRL` and scroll the mouse wheel.
+  - **With Touchpad:** Use pinch-to-zoom gestures (if supported).
 
-1. **Advanced Adjustment Options**:
-   - Include additional adjustments like gamma correction, saturation, and hue shifts.
+- **Scrolling:**
+  - Use mouse wheel or touchpad scrolling gestures.
 
-2. **Automatic Parameter Optimization**:
-   - Implement machine learning techniques to automatically determine optimal brightness and contrast settings.
+- **Panning:**
+  - Click and drag the image to move within its panel.
 
-3. **Support for Different Color Models**:
-   - Add support for adjustments in HSV or LAB color spaces for more fine-grained control.
+- **Buttons:**
 
-Feel free to modify and enhance the project as needed!
+  | Button               | Function                                                   |
+  |----------------------|------------------------------------------------------------|
+  | **Upload Image**     | Opens a dialog to select and upload an image.              |
+  | **Apply Correction** | Processes the uploaded image using flat-field correction.  |
+  | **Edit Correction**  | Enables adjustment sliders for fine-tuning.                |
+  | **Save Changes**     | Saves adjustments made to the corrected image.             |
+  | **Discard Changes**  | Reverts to the original corrected image without adjustments. |
+  | **Settings**         | Opens the settings dialog for additional configurations.   |
+
+## Usage Instructions
+
+1. **Upload an Image:**
+   - Click **Upload Image** and select the desired image file.
+
+2. **Apply Flat-Field Correction:**
+   - Click **Apply Correction** to process the image. The corrected image will display on the right panel.
+
+3. **Edit Corrected Image:**
+   - Click **Edit Correction** to enable adjustment sliders.
+   - Adjust **Exposure**, **Contrast**, and **Brightness** as needed.
+   - The image updates in real-time to reflect changes.
+
+4. **Save or Discard Changes:**
+   - Click **Save Changes** to keep adjustments.
+   - Click **Discard Changes** to revert to the unadjusted corrected image.
+
+5. **Settings:**
+   - Click **Settings** to open the settings dialog.
+   - Configure image mode, toggle dark mode, and manage GPU settings.
+
+## Settings
+
+- **Image Mode:**
+  - **Color:** Processes images in color.
+  - **Infrared:** Processes images as grayscale, optimized for infrared imaging.
+  - **X-Ray:** Processes images as grayscale, optimized for X-ray imaging.
+
+- **Dark Mode:**
+  - Toggle between light and dark themes for the application interface.
+
+- **GPU Settings:**
+  - Enable or disable GPU acceleration (planned for future implementation).
+  - Select an available GPU from the list if enabled.
+
+![Screenshot of Settings Dialog Placeholder](path/to/your/settings_dialog_screenshot.png)
+
+## Requirements
+
+- **Operating System:** Windows 7 or later.
+- **.NET Framework:** Version 4.7.2 or higher.
+- **Hardware:** A mouse or touchpad with gesture support for optimal experience.
+
+## Installation
+
+1. **Clone the Repository:**
+
+   ```bash
+   git clone https://github.com/YourUsername/FlatFieldCorrectionApp.git
+   ```
+
+2. **Open the Solution:**
+   - Open `FlatFieldCorrectionApp.sln` in Visual Studio.
+
+3. **Build the Solution:**
+   - Restore any NuGet packages if prompted.
+   - Build the solution to compile the application.
+
+4. **Run the Application:**
+   - Start the application from Visual Studio or run the executable from the build output directory.
+
+## Future Enhancements
+
+- **GPU Acceleration:**
+  - Implement GPU-based processing using libraries like OpenCL or CUDA for faster image processing.
+
+- **Advanced Touch Support:**
+  - Enhance support for touch gestures on devices with touchscreens.
+
+- **Performance Optimization:**
+  - Optimize image processing algorithms for large images and improve responsiveness.
+
+- **Error Handling and Validation:**
+  - Improve error messages and handle edge cases for better user experience.
+
+## Contributing
+
+Contributions are welcome! Please follow these steps:
+
+1. **Fork the Repository**
+
+2. **Create a Feature Branch**
+
+   ```bash
+   git checkout -b feature/YourFeature
+   ```
+
+3. **Commit Your Changes**
+
+   ```bash
+   git commit -am 'Add a new feature'
+   ```
+
+4. **Push to the Branch**
+
+   ```bash
+   git push origin feature/YourFeature
+   ```
+
+5. **Open a Pull Request**
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
+## Contact
+
+For questions or support, please open an issue on GitHub or contact the maintainer at [your.email@example.com](mailto:your.email@example.com).
+
+---
+
+**Note:** This application is a work in progress. Some features, like GPU acceleration, are planned for future releases.
+
+---
