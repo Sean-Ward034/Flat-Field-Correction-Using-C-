@@ -69,8 +69,11 @@ Gaussian smoothing is applied to both dark and bright field images to reduce noi
 
 **Kernel Used:**
 
-$K = \\frac{1}{16}$ 
-\[begin{bmatrix} 1 & 2 & 1 \\\\ 2 & 4 & 2 \\\\ 1 & 2 & 1 ]\end{bmatrix}$
+$K = \\frac{1}{16}$
+
+$\[
+\begin{bmatrix} 1 & 2 & 1 \\\\ 2 & 4 & 2 \\\\ 1 & 2 & 1 \end{bmatrix}
+\]$
 
 **Convolution Formula:**
 
