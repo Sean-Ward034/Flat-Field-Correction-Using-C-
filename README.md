@@ -41,16 +41,16 @@ The **Advanced Flat Field Correction App** is a Windows Forms application design
 
 Flat-field correction is essential for removing artifacts caused by non-uniform illumination and sensor imperfections. The corrected image is computed using the formula:
 
-\[
+$
 I_{\text{corrected}}(x, y) = \frac{I_{\text{raw}}(x, y) - D(x, y)}{\max(B_{\text{mean}} - D_{\text{mean}}, 1)} \times 255
-\]
+$
 
 Where:
 
-- \( I_{\text{raw}}(x, y) \) is the raw image pixel intensity at position \( (x, y) \).
-- \( D(x, y) \) is the dark field image pixel intensity.
-- \( B_{\text{mean}} \) and \( D_{\text{mean}} \) are the mean intensities of the bright and dark field images, respectively.
-- \( 255 \) scales the corrected intensity back to the 8-bit image range.
+- $( I_{\text{raw}}(x, y) )$ is the raw image pixel intensity at position $( (x, y) )$.
+- $( D(x, y) )$ is the dark field image pixel intensity.
+- $( B_{\text{mean}} )$ and $( D_{\text{mean}} )$ are the mean intensities of the bright and dark field images, respectively.
+- $( 255 )$ scales the corrected intensity back to the 8-bit image range.
 
 **Implementation Details:**
 
@@ -63,9 +63,9 @@ Where:
 - **Gain Calculation:**
   - Gain is calculated to prevent division by zero:
 
-\[
+$
 \text{Gain} = \max(B_{\text{mean}} - D_{\text{mean}}, 1)
-\]
+$
 
 ### 2. Gaussian Smoothing
 
@@ -73,19 +73,19 @@ Gaussian smoothing is applied to both dark and bright field images to reduce noi
 
 **Kernel Used:**
 
-\[
+$
 K = \frac{1}{16} \begin{bmatrix}
 1 & 2 & 1 \\
 2 & 4 & 2 \\
 1 & 2 & 1 \\
 \end{bmatrix}
-\]
+$
 
 **Convolution Formula:**
 
-\[
+$
 I_{\text{smoothed}}(x, y) = \sum_{i=-1}^{1} \sum_{j=-1}^{1} K(i+1, j+1) \cdot I(x+i, y+j)
-\]
+$
 
 Where \( I(x+i, y+j) \) is the pixel intensity at the neighboring positions.
 
@@ -93,17 +93,17 @@ Where \( I(x+i, y+j) \) is the pixel intensity at the neighboring positions.
 
 Adjustments for brightness, contrast, and exposure are applied using the following formula:
 
-\[
+$
 I_{\text{adjusted}} = \text{Clamp}\left( I_{\text{corrected}} \times (1 + B) \times (1 + C + E), 0, 255 \right)
-\]
+$
 
 Where:
 
-- \( I_{\text{corrected}} \) is the corrected image pixel intensity.
-- \( B \) is the brightness adjustment factor \( \left( \frac{\text{Brightness Value}}{100} \right) \).
-- \( C \) is the contrast adjustment factor \( \left( \frac{\text{Contrast Value}}{100} \right) \).
-- \( E \) is the exposure adjustment factor \( \left( \frac{\text{Exposure Value}}{100} \right) \).
-- The `Clamp` function ensures the intensity stays within the valid range \([0, 255]\).
+- $( I_{\text{corrected}} )$ is the corrected image pixel intensity.
+- $( B )$ is the brightness adjustment factor $( \left( \frac{\text{Brightness Value}}{100} \right) )$.
+- $( C )$ is the contrast adjustment factor $( \left( \frac{\text{Contrast Value}}{100} \right) )$.
+- $( E )$ is the exposure adjustment factor $( \left( \frac{\text{Exposure Value}}{100} \right) )$.
+- The `Clamp` function ensures the intensity stays within the valid range $([0, 255])$.
 
 ## User Interface
 
