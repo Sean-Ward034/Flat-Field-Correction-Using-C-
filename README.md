@@ -32,7 +32,7 @@ The **Advanced Flat Field Correction App** is a Windows Forms application design
   - **Dynamic GUI Resizing:**
     - Responsive layout that adjusts to different screen sizes.
   - **Settings:**
-    - Select image mode (`Color`, `Infrared`, `X-Ray`).
+    - Select image mode (`Color`, `Greyscale`).
     - Toggle dark mode theme.
     - Manage GPU settings for future acceleration support.
 
