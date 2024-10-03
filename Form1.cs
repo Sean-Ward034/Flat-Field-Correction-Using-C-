@@ -3,11 +3,15 @@ using System.Drawing;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
 using Microsoft.Azure.Amqp.Framing;
+using Google.Api.Ads.AdWords.v201809;
 
 namespace FlatFieldCorrectionApp
 {
     public partial class Form1 : Form
     {
+        private Bitmap OriginalImage;
+        private Bitmap ProcessedImage;
+
         private Bitmap objectImage;
         private Bitmap darkFrameImage;
         private Bitmap brightFrameImage;
@@ -48,6 +52,8 @@ namespace FlatFieldCorrectionApp
             pictureBoxCorrected.MouseDown += PictureBoxCorrected_MouseDown;
             pictureBoxCorrected.MouseMove += PictureBoxCorrected_MouseMove;
             pictureBoxCorrected.MouseUp += PictureBoxCorrected_MouseUp;
+
+            btnOpenForm2.Enabled = false;
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -84,13 +90,21 @@ namespace FlatFieldCorrectionApp
                     objectImage = new Bitmap(openFileDialog.FileName);
                     pictureBoxObject.Image = objectImage;
 
+                    // Assign OriginalImage properly for use in Form2
+                    OriginalImage = (Bitmap)objectImage.Clone();
+
+                    correctedImage = null;  // Clear previous corrected image
+                    pictureBoxCorrected.Image = null;  // Clear previous display
+
                     // Reset zoom factor and apply zoom
                     zoomFactorObject = 1.0f;
                     ApplyZoom(pictureBoxObject, zoomFactorObject);
 
                     GenerateCalibrationImages(objectImage);
 
-                    MessageBox.Show("Dark and Bright Field Images generated and smoothed automatically.");
+                    btnOpenForm2.Enabled = true;  // Enable Pre-Processing button after upload
+
+                    MessageBox.Show("Image Uploaded and Smoothed Successfully");
                 }
             }
         }
@@ -130,6 +144,88 @@ namespace FlatFieldCorrectionApp
             // Enable "Save Changes" and "Discard Changes" buttons
             btnSaveChanges.Enabled = true;
             btnDiscardChanges.Enabled = true;
+        }
+
+        private void btnOpenForm2_Click(object sender, EventArgs e)
+        {
+            if (OriginalImage != null)
+            {
+                Form2 form2 = new Form2(OriginalImage);
+                form2.FormClosed += (s, args) => {
+                    if (form2.ProcessedImage != null)
+                    {
+                        correctedImage = form2.ProcessedImage;  // Store the corrected image
+                        pictureBoxCorrected.Image = correctedImage;  // Update the corrected image display
+                         MessageBox.Show("Enhancements applied successfully!");
+                    }
+                };
+                form2.ShowDialog();  // Show Form2 as a modal dialog
+            }
+        }
+
+        // Event handler for the new Save button
+        private void btnSaveImage_Click(object sender, EventArgs e)
+        {
+            Bitmap imageToSave = correctedImage;
+
+            if (imageToSave != null)
+            {
+                using (SaveFileDialog saveFileDialog = new SaveFileDialog())
+                {
+                    saveFileDialog.Filter = "Image Files|*.bmp;*.jpg;*.jpeg;*.png";
+                    saveFileDialog.Title = "Save Image As";
+                    if (saveFileDialog.ShowDialog() == DialogResult.OK)
+                    {
+                        try
+                        {
+                            imageToSave.Save(saveFileDialog.FileName);
+                            MessageBox.Show($"Image saved successfully to {saveFileDialog.FileName}!");
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show($"Error saving image: {ex.Message}");
+                        }
+                    }
+                }
+            }
+        }
+
+        private void sliderSharpening_ValueChanged(object sender, EventArgs e)
+        {
+            if (correctedImage != null)
+            {
+                int sharpenStrength = trackBarSharpening.Value;
+                pictureBoxCorrected.Image = ApplySharpening(correctedImage, sharpenStrength);
+            }
+        }
+
+        private Bitmap ApplySharpening(Bitmap image, int strength)
+        {
+            float sharpenAmount = strength / 100.0f;
+            Bitmap blurredImage = new Bitmap(image.Width, image.Height);
+
+            using (Graphics g = Graphics.FromImage(blurredImage))
+            {
+                g.DrawImage(image, new Rectangle(0, 0, image.Width, image.Height),
+                    new Rectangle(1, 1, image.Width - 2, image.Height - 2), GraphicsUnit.Pixel);
+            }
+
+            Bitmap sharpenedImage = new Bitmap(image.Width, image.Height);
+            for (int y = 0; y < image.Height; y++)
+            {
+                for (int x = 0; x < image.Width; x++)
+                {
+                    Color original = image.GetPixel(x, y);
+                    Color blurred = blurredImage.GetPixel(x, y);
+
+                    int r = ClampSharp(original.R + (int)((original.R - blurred.R) * sharpenAmount));
+                    int g = ClampSharp(original.G + (int)((original.G - blurred.G) * sharpenAmount));
+                    int b = ClampSharp(original.B + (int)((original.B - blurred.B) * sharpenAmount));
+
+                    sharpenedImage.SetPixel(x, y, Color.FromArgb(r, g, b));
+                }
+            }
+            return sharpenedImage;
         }
 
         private void trackBarBrightness_ValueChanged(object sender, EventArgs e)
@@ -245,7 +341,7 @@ namespace FlatFieldCorrectionApp
 
         private Bitmap CreateBrightField(Bitmap objectImage)
         {
-            return AdjustBrightness(objectImage, 1.5f); // Increase brightness by 50%
+            return AdjustBrightness(objectImage, 2.5f);
         }
 
         private Bitmap AdjustBrightness(Bitmap image, float factor)
@@ -278,7 +374,7 @@ namespace FlatFieldCorrectionApp
                 {
                     // Implement your GPU-accelerated flat field correction here
                     // Placeholder: Show a message indicating GPU usage
-                    MessageBox.Show("GPU acceleration is enabled, but GPU processing is not implemented yet.");
+                    //MessageBox.Show("GPU acceleration is enabled, but GPU processing is not implemented yet.");
                 }
                 catch (Exception ex)
                 {
@@ -320,8 +416,8 @@ namespace FlatFieldCorrectionApp
                             correctedB = (int)(((rawPixel.B - darkPixel.B) / gain) * 255);
                             break;
 
-                        case "Infrared":
-                        case "X-Ray":
+                        case "Greyscale":
+
                         default:
                             // Process as grayscale
                             int rawIntensity = (rawPixel.R + rawPixel.G + rawPixel.B) / 3;
@@ -398,6 +494,11 @@ namespace FlatFieldCorrectionApp
         private int Clamp(int value, int min, int max)
         {
             return value < min ? min : value > max ? max : value;
+        }
+
+        private int ClampSharp(int value, int min = 0, int max = 255)
+        {
+            return value < min ? min : (value > max ? max : value);
         }
 
         private void btnSettings_Click(object sender, EventArgs e)

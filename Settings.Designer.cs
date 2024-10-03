@@ -48,8 +48,7 @@
             this.comboBoxMode.FormattingEnabled = true;
             this.comboBoxMode.Items.AddRange(new object[] {
             "Color",
-            "Infrared",
-            "X-Ray"});
+            "Greyscale"});
             this.comboBoxMode.Location = new System.Drawing.Point(130, 17);
             this.comboBoxMode.Name = "comboBoxMode";
             this.comboBoxMode.Size = new System.Drawing.Size(150, 24);

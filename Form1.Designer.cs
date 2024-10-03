@@ -1,4 +1,4 @@
-﻿namespace FlatFieldCorrectionApp
+﻿﻿namespace FlatFieldCorrectionApp
 {
     partial class Form1
     {
@@ -16,14 +16,19 @@
         private System.Windows.Forms.Button btnSaveChanges;
         private System.Windows.Forms.Button btnDiscardChanges;
         private System.Windows.Forms.Button btnSettings;
+        private System.Windows.Forms.Button btnOpenForm2;
+        private System.Windows.Forms.Button btnSaveImage;
+        private System.Windows.Forms.Label labelStatus;
 
         private System.Windows.Forms.GroupBox groupBoxAdjustments; // Group box for adjustments
         private System.Windows.Forms.TrackBar trackBarBrightness;
         private System.Windows.Forms.TrackBar trackBarContrast;
         private System.Windows.Forms.TrackBar trackBarExposure;
+        private System.Windows.Forms.TrackBar trackBarSharpening;
         private System.Windows.Forms.Label lblBrightness;
         private System.Windows.Forms.Label lblContrast;
         private System.Windows.Forms.Label lblExposure;
+        private System.Windows.Forms.Label lblSharpening;
 
         protected override void Dispose(bool disposing)
         {
@@ -54,6 +59,11 @@
             this.lblBrightness = new System.Windows.Forms.Label();
             this.lblContrast = new System.Windows.Forms.Label();
             this.lblExposure = new System.Windows.Forms.Label();
+            this.trackBarSharpening = new System.Windows.Forms.TrackBar();
+            this.lblSharpening = new System.Windows.Forms.Label();
+            this.btnSaveImage = new System.Windows.Forms.Button();
+            this.labelStatus = new System.Windows.Forms.Label();
+            this.btnOpenForm2 = new System.Windows.Forms.Button();
             this.panelObjectImage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxObject)).BeginInit();
             this.panelCorrectedImage.SuspendLayout();
@@ -63,18 +73,19 @@
             ((System.ComponentModel.ISupportInitialize)(this.trackBarBrightness)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarContrast)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarExposure)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarSharpening)).BeginInit();
             this.SuspendLayout();
             // 
             // panelObjectImage
             // 
-            this.panelObjectImage.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                                    | System.Windows.Forms.AnchorStyles.Left))));
+            this.panelObjectImage.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.panelObjectImage.AutoScroll = true;
             this.panelObjectImage.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panelObjectImage.Controls.Add(this.pictureBoxObject);
-            this.panelObjectImage.Location = new System.Drawing.Point(12, 12);
+            this.panelObjectImage.Location = new System.Drawing.Point(12, 49);
             this.panelObjectImage.Name = "panelObjectImage";
-            this.panelObjectImage.Size = new System.Drawing.Size(700, 500);
+            this.panelObjectImage.Size = new System.Drawing.Size(700, 628);
             this.panelObjectImage.TabIndex = 0;
             // 
             // pictureBoxObject
@@ -88,14 +99,14 @@
             // 
             // panelCorrectedImage
             // 
-            this.panelCorrectedImage.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                                    | System.Windows.Forms.AnchorStyles.Right))));
+            this.panelCorrectedImage.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.panelCorrectedImage.AutoScroll = true;
             this.panelCorrectedImage.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panelCorrectedImage.Controls.Add(this.pictureBoxCorrected);
-            this.panelCorrectedImage.Location = new System.Drawing.Point(718, 12);
+            this.panelCorrectedImage.Location = new System.Drawing.Point(720, 50);
             this.panelCorrectedImage.Name = "panelCorrectedImage";
-            this.panelCorrectedImage.Size = new System.Drawing.Size(700, 500);
+            this.panelCorrectedImage.Size = new System.Drawing.Size(700, 626);
             this.panelCorrectedImage.TabIndex = 1;
             // 
             // pictureBoxCorrected
@@ -109,24 +120,25 @@
             // 
             // panelControls
             // 
-            this.panelControls.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
-                                    | System.Windows.Forms.AnchorStyles.Right)));
+            this.panelControls.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.panelControls.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panelControls.Controls.Add(this.btnUpload);
+            this.panelControls.Controls.Add(this.labelStatus);
             this.panelControls.Controls.Add(this.btnApplyCorrection);
             this.panelControls.Controls.Add(this.btnEditCorrection);
             this.panelControls.Controls.Add(this.btnSaveChanges);
             this.panelControls.Controls.Add(this.btnDiscardChanges);
             this.panelControls.Controls.Add(this.btnSettings);
             this.panelControls.Controls.Add(this.groupBoxAdjustments);
-            this.panelControls.Location = new System.Drawing.Point(12, 520);
+            this.panelControls.Location = new System.Drawing.Point(12, 682);
             this.panelControls.Name = "panelControls";
-            this.panelControls.Size = new System.Drawing.Size(1406, 200);
+            this.panelControls.Size = new System.Drawing.Size(1406, 201);
             this.panelControls.TabIndex = 2;
             // 
             // btnUpload
             // 
-            this.btnUpload.Location = new System.Drawing.Point(15, 15);
+            this.btnUpload.Location = new System.Drawing.Point(3, 14);
             this.btnUpload.Name = "btnUpload";
             this.btnUpload.Size = new System.Drawing.Size(160, 40);
             this.btnUpload.TabIndex = 0;
@@ -136,7 +148,7 @@
             // 
             // btnApplyCorrection
             // 
-            this.btnApplyCorrection.Location = new System.Drawing.Point(190, 15);
+            this.btnApplyCorrection.Location = new System.Drawing.Point(383, 14);
             this.btnApplyCorrection.Name = "btnApplyCorrection";
             this.btnApplyCorrection.Size = new System.Drawing.Size(160, 40);
             this.btnApplyCorrection.TabIndex = 1;
@@ -147,7 +159,7 @@
             // btnEditCorrection
             // 
             this.btnEditCorrection.Enabled = false;
-            this.btnEditCorrection.Location = new System.Drawing.Point(365, 15);
+            this.btnEditCorrection.Location = new System.Drawing.Point(549, 14);
             this.btnEditCorrection.Name = "btnEditCorrection";
             this.btnEditCorrection.Size = new System.Drawing.Size(160, 40);
             this.btnEditCorrection.TabIndex = 2;
@@ -158,7 +170,7 @@
             // btnSaveChanges
             // 
             this.btnSaveChanges.Enabled = false;
-            this.btnSaveChanges.Location = new System.Drawing.Point(540, 15);
+            this.btnSaveChanges.Location = new System.Drawing.Point(549, 103);
             this.btnSaveChanges.Name = "btnSaveChanges";
             this.btnSaveChanges.Size = new System.Drawing.Size(160, 40);
             this.btnSaveChanges.TabIndex = 3;
@@ -169,7 +181,7 @@
             // btnDiscardChanges
             // 
             this.btnDiscardChanges.Enabled = false;
-            this.btnDiscardChanges.Location = new System.Drawing.Point(715, 15);
+            this.btnDiscardChanges.Location = new System.Drawing.Point(549, 149);
             this.btnDiscardChanges.Name = "btnDiscardChanges";
             this.btnDiscardChanges.Size = new System.Drawing.Size(160, 40);
             this.btnDiscardChanges.TabIndex = 4;
@@ -179,7 +191,7 @@
             // 
             // btnSettings
             // 
-            this.btnSettings.Location = new System.Drawing.Point(890, 15);
+            this.btnSettings.Location = new System.Drawing.Point(3, 156);
             this.btnSettings.Name = "btnSettings";
             this.btnSettings.Size = new System.Drawing.Size(160, 40);
             this.btnSettings.TabIndex = 5;
@@ -189,17 +201,19 @@
             // 
             // groupBoxAdjustments
             // 
-            this.groupBoxAdjustments.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                                    | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxAdjustments.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxAdjustments.Controls.Add(this.trackBarBrightness);
             this.groupBoxAdjustments.Controls.Add(this.trackBarContrast);
             this.groupBoxAdjustments.Controls.Add(this.trackBarExposure);
             this.groupBoxAdjustments.Controls.Add(this.lblBrightness);
             this.groupBoxAdjustments.Controls.Add(this.lblContrast);
             this.groupBoxAdjustments.Controls.Add(this.lblExposure);
-            this.groupBoxAdjustments.Location = new System.Drawing.Point(1070, 10);
+            this.groupBoxAdjustments.Controls.Add(this.trackBarSharpening);
+            this.groupBoxAdjustments.Controls.Add(this.lblSharpening);
+            this.groupBoxAdjustments.Location = new System.Drawing.Point(715, 14);
             this.groupBoxAdjustments.Name = "groupBoxAdjustments";
-            this.groupBoxAdjustments.Size = new System.Drawing.Size(320, 180);
+            this.groupBoxAdjustments.Size = new System.Drawing.Size(675, 182);
             this.groupBoxAdjustments.TabIndex = 6;
             this.groupBoxAdjustments.TabStop = false;
             this.groupBoxAdjustments.Text = "Adjustments";
@@ -236,7 +250,7 @@
             this.trackBarExposure.Minimum = -100;
             this.trackBarExposure.Name = "trackBarExposure";
             this.trackBarExposure.Size = new System.Drawing.Size(220, 56);
-            this.trackBarExposure.TabIndex = 0;
+            this.trackBarExposure.TabIndex = 3;
             this.trackBarExposure.TickFrequency = 10;
             this.trackBarExposure.ValueChanged += new System.EventHandler(this.trackBarExposure_ValueChanged);
             // 
@@ -245,7 +259,7 @@
             this.lblBrightness.AutoSize = true;
             this.lblBrightness.Location = new System.Drawing.Point(10, 130);
             this.lblBrightness.Name = "lblBrightness";
-            this.lblBrightness.Size = new System.Drawing.Size(79, 17);
+            this.lblBrightness.Size = new System.Drawing.Size(73, 16);
             this.lblBrightness.TabIndex = 5;
             this.lblBrightness.Text = "Brightness:";
             // 
@@ -254,7 +268,7 @@
             this.lblContrast.AutoSize = true;
             this.lblContrast.Location = new System.Drawing.Point(10, 80);
             this.lblContrast.Name = "lblContrast";
-            this.lblContrast.Size = new System.Drawing.Size(67, 17);
+            this.lblContrast.Size = new System.Drawing.Size(59, 16);
             this.lblContrast.TabIndex = 4;
             this.lblContrast.Text = "Contrast:";
             // 
@@ -263,16 +277,66 @@
             this.lblExposure.AutoSize = true;
             this.lblExposure.Location = new System.Drawing.Point(10, 30);
             this.lblExposure.Name = "lblExposure";
-            this.lblExposure.Size = new System.Drawing.Size(73, 17);
+            this.lblExposure.Size = new System.Drawing.Size(67, 16);
             this.lblExposure.TabIndex = 3;
             this.lblExposure.Text = "Exposure:";
             // 
+            // trackBarSharpening
+            // 
+            this.trackBarSharpening.Enabled = false;
+            this.trackBarSharpening.Location = new System.Drawing.Point(435, 20);
+            this.trackBarSharpening.Maximum = 100;
+            this.trackBarSharpening.Minimum = -100;
+            this.trackBarSharpening.Name = "trackBarSharpening";
+            this.trackBarSharpening.Size = new System.Drawing.Size(220, 56);
+            this.trackBarSharpening.TabIndex = 4;
+            this.trackBarSharpening.TickFrequency = 10;
+            this.trackBarSharpening.ValueChanged += new System.EventHandler(this.sliderSharpening_ValueChanged);
+            // 
+            // lblSharpening
+            // 
+            this.lblSharpening.Location = new System.Drawing.Point(347, 26);
+            this.lblSharpening.Name = "lblSharpening";
+            this.lblSharpening.Size = new System.Drawing.Size(100, 20);
+            this.lblSharpening.TabIndex = 6;
+            this.lblSharpening.Text = "Sharpening";
+            // 
+            // btnSaveImage
+            // 
+            this.btnSaveImage.Location = new System.Drawing.Point(1270, 14);
+            this.btnSaveImage.Name = "btnSaveImage";
+            this.btnSaveImage.Size = new System.Drawing.Size(150, 30);
+            this.btnSaveImage.TabIndex = 0;
+            this.btnSaveImage.Text = "Save Corrected Image";
+            this.btnSaveImage.UseVisualStyleBackColor = true;
+            this.btnSaveImage.Click += new System.EventHandler(this.btnSaveImage_Click);
+            // 
+            // labelStatus
+            // 
+            this.labelStatus.Location = new System.Drawing.Point(12, 57);
+            this.labelStatus.Name = "labelStatus";
+            this.labelStatus.Size = new System.Drawing.Size(163, 20);
+            this.labelStatus.TabIndex = 1;
+            this.labelStatus.Text = "Ready";
+            // 
+            // btnOpenForm2
+            // 
+            this.btnOpenForm2.Location = new System.Drawing.Point(12, 12);
+            this.btnOpenForm2.Name = "btnOpenForm2";
+            this.btnOpenForm2.Size = new System.Drawing.Size(112, 30);
+            this.btnOpenForm2.TabIndex = 3;
+            this.btnOpenForm2.Text = "Pre-Processing";
+            this.btnOpenForm2.UseVisualStyleBackColor = true;
+            this.btnOpenForm2.Click += new System.EventHandler(this.btnOpenForm2_Click);
+            // 
             // Form1
             // 
-            this.ClientSize = new System.Drawing.Size(1430, 732);
+            this.ClientSize = new System.Drawing.Size(1432, 895);
+            this.Controls.Add(this.btnSaveImage);
             this.Controls.Add(this.panelObjectImage);
             this.Controls.Add(this.panelCorrectedImage);
             this.Controls.Add(this.panelControls);
+            this.Controls.Add(this.btnOpenForm2);
             this.MinimumSize = new System.Drawing.Size(1450, 780);
             this.Name = "Form1";
             this.Text = "Advanced Flat Field Correction App";
@@ -289,6 +353,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.trackBarBrightness)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarContrast)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarExposure)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarSharpening)).EndInit();
             this.ResumeLayout(false);
 
         }
