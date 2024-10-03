@@ -1,5 +1,7 @@
 # Advanced Flat Field Correction App
 
+![Screenshot of Cool Correction Placeholder](Images/Screenshot6.png)
+
 ## Overview
 
 The **Advanced Flat Field Correction App** is a Windows Forms application designed to perform flat-field correction on images, particularly beneficial in fields like microscopy, medical imaging, and photography. The application offers a user-friendly interface with advanced features to enhance image quality by correcting uneven illumination and sensor defects.
@@ -129,6 +131,7 @@ Where:
   | Button               | Function                                                   |
   |----------------------|------------------------------------------------------------|
   | **Upload Image**     | Opens a dialog to select and upload an image.              |
+  | **Pre-process**      | Opens a window for manually editing image prior to correction |
   | **Apply Correction** | Processes the uploaded image using flat-field correction.  |
   | **Edit Correction**  | Enables adjustment sliders for fine-tuning.                |
   | **Save Changes**     | Saves adjustments made to the corrected image.             |
