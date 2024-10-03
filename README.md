@@ -4,7 +4,7 @@
 
 The **Advanced Flat Field Correction App** is a Windows Forms application designed to perform flat-field correction on images, particularly beneficial in fields like microscopy, medical imaging, and photography. The application offers a user-friendly interface with advanced features to enhance image quality by correcting uneven illumination and sensor defects.
 
-![Screenshot of Main Interface Placeholder](Images/screenshot1.png)
+![Screenshot of Main Interface Placeholder](Images/Screenshot1.png)
 
 ## Features
 
@@ -40,16 +40,14 @@ The **Advanced Flat Field Correction App** is a Windows Forms application design
 
 Flat-field correction is essential for removing artifacts caused by non-uniform illumination and sensor imperfections. The corrected image is computed using the formula:
 
-\[
-I_{\text{corrected}}(x, y) = \frac{I_{\text{raw}}(x, y) - D(x, y)}{\max(B_{\text{mean}} - D_{\text{mean}}, 1)} \times 255
-\]
+$I_{\\text{corrected}}(x, y) = \\frac{I_{\\text{raw}}(x, y) - D(x, y)}{\\text{Gain}} \\times 255$
 
 Where:
 
-- \( I_{\text{raw}}(x, y) \) is the raw image pixel intensity at position \( (x, y) \).
-- \( D(x, y) \) is the dark field image pixel intensity.
-- \( B_{\text{mean}} \) and \( D_{\text{mean}} \) are the mean intensities of the bright and dark field images, respectively.
-- \( 255 \) scales the corrected intensity back to the 8-bit image range.
+- $( I_{\text{raw}}(x, y) )$ is the raw image pixel intensity at position $( (x, y) )$.
+- $( D(x, y) )$ is the dark field image pixel intensity.
+- $( B_{\text{mean}} )$ and $( D_{\text{mean}} )$ are the mean intensities of the bright and dark field images, respectively.
+- $( 255 )$ scales the corrected intensity back to the 8-bit image range.
 
 **Implementation Details:**
 
@@ -61,9 +59,8 @@ Where:
 
 - **Gain Calculation:**
   - Gain is calculated to prevent division by zero:
-    \[
-    \text{Gain} = \max(B_{\text{mean}} - D_{\text{mean}}, 1)
-    \]
+
+$\\text{Gain} = \\max(B_{\\text{mean}} - D_{\\text{mean}}, 1)$
 
 ### 2. Gaussian Smoothing
 
@@ -71,37 +68,34 @@ Gaussian smoothing is applied to both dark and bright field images to reduce noi
 
 **Kernel Used:**
 
-\[
-K = \frac{1}{16} \begin{bmatrix}
-1 & 2 & 1 \\
-2 & 4 & 2 \\
-1 & 2 & 1 \\
+$$
+K = \frac{1}{16} \cdot
+\begin{bmatrix}
+  1 & 2 & 1 \\
+  2 & 4 & 2 \\
+  1 & 2 & 1
 \end{bmatrix}
-\]
+$$
 
 **Convolution Formula:**
 
-\[
-I_{\text{smoothed}}(x, y) = \sum_{i=-1}^{1} \sum_{j=-1}^{1} K(i+1, j+1) \cdot I(x+i, y+j)
-\]
+$I_{\\text{smoothed}}(x, y) = \\sum_{i=-1}^{1} \\sum_{j=-1}^{1} K(i+1, j+1) \\cdot I(x+i, y+j)$
 
-Where \( I(x+i, y+j) \) is the pixel intensity at the neighboring positions.
+Where $( I(x+i, y+j) )$ is the pixel intensity at the neighboring positions.
 
 ### 3. Image Adjustments
 
 Adjustments for brightness, contrast, and exposure are applied using the following formula:
 
-\[
-I_{\text{adjusted}} = \text{Clamp}\left( I_{\text{corrected}} \times (1 + B) \times (1 + C + E), 0, 255 \right)
-\]
+$I_{\\text{adjusted}} = \\text{Clamp} \\left( I_{\\text{corrected}} \\times (1 + B) \\times (1 + C + E), 0, 255 \\right)$
 
 Where:
 
-- \( I_{\text{corrected}} \) is the corrected image pixel intensity.
-- \( B \) is the brightness adjustment factor (\( \frac{\text{Brightness Value}}{100} \)).
-- \( C \) is the contrast adjustment factor (\( \frac{\text{Contrast Value}}{100} \)).
-- \( E \) is the exposure adjustment factor (\( \frac{\text{Exposure Value}}{100} \)).
-- \( \text{Clamp} \) function ensures the intensity stays within the valid range [0, 255].
+- $( I_{\text{corrected}} )$ is the corrected image pixel intensity.
+- $( B )$ is the brightness adjustment factor $( \left( \frac{\text{Brightness Value}}{100} \right) )$.
+- $( C )$ is the contrast adjustment factor $( \left( \frac{\text{Contrast Value}}{100} \right) )$.
+- $( E )$ is the exposure adjustment factor $( \left( \frac{\text{Exposure Value}}{100} \right) )$.
+- The `Clamp` function ensures the intensity stays within the valid range $([0, 255])$.
 
 ## User Interface
 
@@ -116,7 +110,7 @@ Where:
     - `Upload Image`, `Apply Correction`, `Edit Correction`, `Save Changes`, `Discard Changes`, `Settings`.
   - **Adjustments Group Box:** Contains sliders for `Exposure`, `Contrast`, and `Brightness`.
 
-![Screenshot of UI Layout Placeholder](Images/screenshot2.png)
+![Screenshot of UI Layout Placeholder](Images/Screenshot2.png)
 
 ### Controls and Shortcuts
 
@@ -154,13 +148,13 @@ Where:
    - Adjust **Exposure**, **Contrast**, and **Brightness** as needed.
    - The image updates in real-time to reflect changes.
 
-![Screenshot of Edit Controls](Images/screenshot5.png)
+![Screenshot of Edit Controls](Images/Screenshot5.png)
 
-5. **Save or Discard Changes:**
+4. **Save or Discard Changes:**
    - Click **Save Changes** to keep adjustments.
    - Click **Discard Changes** to revert to the unadjusted corrected image.
 
-6. **Settings:**
+5. **Settings:**
    - Click **Settings** to open the settings dialog.
    - Configure image mode, toggle dark mode, and manage GPU settings.
 
@@ -178,7 +172,7 @@ Where:
   - Enable or disable GPU acceleration (planned for future implementation).
   - Select an available GPU from the list if enabled.
 
-![Screenshot of Settings Dialog Placeholder](Images/screenshot4.png)
+![Screenshot of Settings Dialog Placeholder](Images/Screenshot4.png)
 
 ## Requirements
 
@@ -250,10 +244,12 @@ This project is licensed under the GNU General Public License v3.0. See the [LIC
 
 ## Contact
 
-For questions or support, please open an issue on GitHub or contact the maintainer at [your.email@example.com](mailto:your.email@example.com).
+For questions or support, please open an issue on GitHub or contact the maintainer at [tnvolfan034@gmail.com]
 
 ---
 
-**Note:** This application is a work in progress. Some features, like GPU acceleration, are planned for future releases.
+**
+
+Note:** This application is a work in progress. Some features, like GPU acceleration, are planned for future releases.
 
 ---
