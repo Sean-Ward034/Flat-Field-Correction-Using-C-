@@ -4,12 +4,14 @@
     {
         private System.ComponentModel.IContainer components = null;
 
+        private System.Windows.Forms.Panel panelControls; // Panel for controls
         private System.Windows.Forms.Panel panelObjectImage;
         private System.Windows.Forms.Panel panelCorrectedImage;
+
         private System.Windows.Forms.PictureBox pictureBoxObject;
         private System.Windows.Forms.PictureBox pictureBoxCorrected;
+        private System.Windows.Forms.GroupBox groupBoxAdjustments; // Group box for adjustments
 
-        private System.Windows.Forms.Panel panelControls; // Panel for controls
         private System.Windows.Forms.Button btnUpload;
         private System.Windows.Forms.Button btnApplyCorrection;
         private System.Windows.Forms.Button btnEditCorrection;
@@ -18,17 +20,18 @@
         private System.Windows.Forms.Button btnSettings;
         private System.Windows.Forms.Button btnOpenForm2;
         private System.Windows.Forms.Button btnSaveImage;
-        private System.Windows.Forms.Label labelStatus;
+        private System.Windows.Forms.Button btnAIEnhance;
 
-        private System.Windows.Forms.GroupBox groupBoxAdjustments; // Group box for adjustments
         private System.Windows.Forms.TrackBar trackBarBrightness;
         private System.Windows.Forms.TrackBar trackBarContrast;
         private System.Windows.Forms.TrackBar trackBarExposure;
         private System.Windows.Forms.TrackBar trackBarSharpening;
+
         private System.Windows.Forms.Label lblBrightness;
         private System.Windows.Forms.Label lblContrast;
         private System.Windows.Forms.Label lblExposure;
         private System.Windows.Forms.Label lblSharpening;
+        private System.Windows.Forms.Label labelStatus;
 
         protected override void Dispose(bool disposing)
         {
@@ -47,6 +50,7 @@
             this.pictureBoxCorrected = new System.Windows.Forms.PictureBox();
             this.panelControls = new System.Windows.Forms.Panel();
             this.btnUpload = new System.Windows.Forms.Button();
+            this.labelStatus = new System.Windows.Forms.Label();
             this.btnApplyCorrection = new System.Windows.Forms.Button();
             this.btnEditCorrection = new System.Windows.Forms.Button();
             this.btnSaveChanges = new System.Windows.Forms.Button();
@@ -62,8 +66,8 @@
             this.trackBarSharpening = new System.Windows.Forms.TrackBar();
             this.lblSharpening = new System.Windows.Forms.Label();
             this.btnSaveImage = new System.Windows.Forms.Button();
-            this.labelStatus = new System.Windows.Forms.Label();
             this.btnOpenForm2 = new System.Windows.Forms.Button();
+            this.btnAIEnhance = new System.Windows.Forms.Button();
             this.panelObjectImage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxObject)).BeginInit();
             this.panelCorrectedImage.SuspendLayout();
@@ -85,7 +89,7 @@
             this.panelObjectImage.Controls.Add(this.pictureBoxObject);
             this.panelObjectImage.Location = new System.Drawing.Point(12, 49);
             this.panelObjectImage.Name = "panelObjectImage";
-            this.panelObjectImage.Size = new System.Drawing.Size(700, 628);
+            this.panelObjectImage.Size = new System.Drawing.Size(700, 480);
             this.panelObjectImage.TabIndex = 0;
             // 
             // pictureBoxObject
@@ -106,7 +110,7 @@
             this.panelCorrectedImage.Controls.Add(this.pictureBoxCorrected);
             this.panelCorrectedImage.Location = new System.Drawing.Point(720, 50);
             this.panelCorrectedImage.Name = "panelCorrectedImage";
-            this.panelCorrectedImage.Size = new System.Drawing.Size(700, 626);
+            this.panelCorrectedImage.Size = new System.Drawing.Size(700, 478);
             this.panelCorrectedImage.TabIndex = 1;
             // 
             // pictureBoxCorrected
@@ -123,6 +127,7 @@
             this.panelControls.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panelControls.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelControls.Controls.Add(this.btnAIEnhance);
             this.panelControls.Controls.Add(this.btnUpload);
             this.panelControls.Controls.Add(this.labelStatus);
             this.panelControls.Controls.Add(this.btnApplyCorrection);
@@ -131,9 +136,9 @@
             this.panelControls.Controls.Add(this.btnDiscardChanges);
             this.panelControls.Controls.Add(this.btnSettings);
             this.panelControls.Controls.Add(this.groupBoxAdjustments);
-            this.panelControls.Location = new System.Drawing.Point(12, 682);
+            this.panelControls.Location = new System.Drawing.Point(12, 534);
             this.panelControls.Name = "panelControls";
-            this.panelControls.Size = new System.Drawing.Size(1406, 201);
+            this.panelControls.Size = new System.Drawing.Size(1408, 201);
             this.panelControls.TabIndex = 2;
             // 
             // btnUpload
@@ -146,9 +151,17 @@
             this.btnUpload.UseVisualStyleBackColor = true;
             this.btnUpload.Click += new System.EventHandler(this.btnUpload_Click);
             // 
+            // labelStatus
+            // 
+            this.labelStatus.Location = new System.Drawing.Point(12, 57);
+            this.labelStatus.Name = "labelStatus";
+            this.labelStatus.Size = new System.Drawing.Size(163, 20);
+            this.labelStatus.TabIndex = 1;
+            this.labelStatus.Text = "Ready";
+            // 
             // btnApplyCorrection
             // 
-            this.btnApplyCorrection.Location = new System.Drawing.Point(383, 14);
+            this.btnApplyCorrection.Location = new System.Drawing.Point(549, 11);
             this.btnApplyCorrection.Name = "btnApplyCorrection";
             this.btnApplyCorrection.Size = new System.Drawing.Size(160, 40);
             this.btnApplyCorrection.TabIndex = 1;
@@ -159,7 +172,7 @@
             // btnEditCorrection
             // 
             this.btnEditCorrection.Enabled = false;
-            this.btnEditCorrection.Location = new System.Drawing.Point(549, 14);
+            this.btnEditCorrection.Location = new System.Drawing.Point(549, 57);
             this.btnEditCorrection.Name = "btnEditCorrection";
             this.btnEditCorrection.Size = new System.Drawing.Size(160, 40);
             this.btnEditCorrection.TabIndex = 2;
@@ -211,9 +224,9 @@
             this.groupBoxAdjustments.Controls.Add(this.lblExposure);
             this.groupBoxAdjustments.Controls.Add(this.trackBarSharpening);
             this.groupBoxAdjustments.Controls.Add(this.lblSharpening);
-            this.groupBoxAdjustments.Location = new System.Drawing.Point(715, 14);
+            this.groupBoxAdjustments.Location = new System.Drawing.Point(708, 14);
             this.groupBoxAdjustments.Name = "groupBoxAdjustments";
-            this.groupBoxAdjustments.Size = new System.Drawing.Size(675, 182);
+            this.groupBoxAdjustments.Size = new System.Drawing.Size(695, 175);
             this.groupBoxAdjustments.TabIndex = 6;
             this.groupBoxAdjustments.TabStop = false;
             this.groupBoxAdjustments.Text = "Adjustments";
@@ -311,14 +324,6 @@
             this.btnSaveImage.UseVisualStyleBackColor = true;
             this.btnSaveImage.Click += new System.EventHandler(this.btnSaveImage_Click);
             // 
-            // labelStatus
-            // 
-            this.labelStatus.Location = new System.Drawing.Point(12, 57);
-            this.labelStatus.Name = "labelStatus";
-            this.labelStatus.Size = new System.Drawing.Size(163, 20);
-            this.labelStatus.TabIndex = 1;
-            this.labelStatus.Text = "Ready";
-            // 
             // btnOpenForm2
             // 
             this.btnOpenForm2.Location = new System.Drawing.Point(12, 12);
@@ -329,9 +334,19 @@
             this.btnOpenForm2.UseVisualStyleBackColor = true;
             this.btnOpenForm2.Click += new System.EventHandler(this.btnOpenForm2_Click);
             // 
+            // btnAIEnhance
+            // 
+            this.btnAIEnhance.Location = new System.Drawing.Point(383, 11);
+            this.btnAIEnhance.Name = "btnAIEnhance";
+            this.btnAIEnhance.Size = new System.Drawing.Size(160, 41);
+            this.btnAIEnhance.TabIndex = 5;
+            this.btnAIEnhance.Text = "AI Enhance";
+            this.btnAIEnhance.UseVisualStyleBackColor = true;
+            this.btnAIEnhance.Click += new System.EventHandler(this.btnAIEnhance_Click);
+            // 
             // Form1
             // 
-            this.ClientSize = new System.Drawing.Size(1432, 895);
+            this.ClientSize = new System.Drawing.Size(1432, 747);
             this.Controls.Add(this.btnSaveImage);
             this.Controls.Add(this.panelObjectImage);
             this.Controls.Add(this.panelCorrectedImage);

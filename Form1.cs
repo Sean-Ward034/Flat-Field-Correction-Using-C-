@@ -4,6 +4,7 @@ using System.Windows.Forms;
 using System.Runtime.InteropServices;
 using Microsoft.Azure.Amqp.Framing;
 using Google.Api.Ads.AdWords.v201809;
+using FlatFieldCorrection;
 
 namespace FlatFieldCorrectionApp
 {
@@ -265,6 +266,50 @@ namespace FlatFieldCorrectionApp
 
                 // Reset UI controls after discarding
                 ResetEditingControls();
+            }
+        }
+
+        private void btnAIEnhance_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (correctedImage == null)
+                {
+                    MessageBox.Show("Please apply flat-field correction before AI enhancement.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                // Step 1: Open a file dialog for the user to choose the ONNX model file
+                using (OpenFileDialog openFileDialog = new OpenFileDialog())
+                {
+                    openFileDialog.Title = "Select AI Model for Enhancement";
+                    openFileDialog.Filter = "ONNX Files (*.onnx)|*.onnx";
+                    openFileDialog.InitialDirectory = Application.StartupPath + @"\Models";  // Set default path if applicable
+
+                    if (openFileDialog.ShowDialog() == DialogResult.OK)
+                    {
+                        // Step 2: Display message indicating the start of AI Enhancement
+                        MessageBox.Show("Starting AI Enhancement. This may take a few moments.", "AI Enhancement", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                        // Step 3: Use the selected model path for AI processing
+                        string modelPath = openFileDialog.FileName;
+
+                        // Call the Real-ESRGAN processor to enhance the corrected image using the selected model
+                        var upscaledImage = RealESRGANProcessor.UpscaleImage(correctedImage, modelPath);
+
+                        // Step 4: Open the new Form3 to display the enhanced image
+                        Form3 enhancedForm = new Form3(upscaledImage);
+                        enhancedForm.Show();
+                    }
+                    else
+                    {
+                        MessageBox.Show("Model selection was cancelled. AI Enhancement not started.", "Cancelled", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"AI Enhancement failed: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
