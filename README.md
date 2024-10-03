@@ -1,5 +1,7 @@
 # Advanced Flat Field Correction App
 
+![Screenshot of Cool Correction Placeholder](Images/Screenshot6.png)
+
 ## Overview
 
 The **Advanced Flat Field Correction App** is a Windows Forms application designed to perform flat-field correction on images, particularly beneficial in fields like microscopy, medical imaging, and photography. The application offers a user-friendly interface with advanced features to enhance image quality by correcting uneven illumination and sensor defects.
@@ -30,7 +32,7 @@ The **Advanced Flat Field Correction App** is a Windows Forms application design
   - **Dynamic GUI Resizing:**
     - Responsive layout that adjusts to different screen sizes.
   - **Settings:**
-    - Select image mode (`Color`, `Infrared`, `X-Ray`).
+    - Select image mode (`Color`, `Greyscale`).
     - Toggle dark mode theme.
     - Manage GPU settings for future acceleration support.
 
@@ -129,6 +131,7 @@ Where:
   | Button               | Function                                                   |
   |----------------------|------------------------------------------------------------|
   | **Upload Image**     | Opens a dialog to select and upload an image.              |
+  | **Pre-process**      | Opens a window for manually editing image prior to correction |
   | **Apply Correction** | Processes the uploaded image using flat-field correction.  |
   | **Edit Correction**  | Enables adjustment sliders for fine-tuning.                |
   | **Save Changes**     | Saves adjustments made to the corrected image.             |
@@ -139,6 +142,9 @@ Where:
 
 1. **Upload an Image:**
    - Click **Upload Image** and select the desired image file.
+   - **Optional:** use the **Pre-Process** window to refine the image prior to correction.
+
+![Screenshot of Pre-Process Controls](Images/Screenshot7.png)
 
 2. **Apply Flat-Field Correction:**
    - Click **Apply Correction** to process the image. The corrected image will display on the right panel.
