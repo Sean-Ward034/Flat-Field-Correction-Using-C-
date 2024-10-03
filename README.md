@@ -142,6 +142,9 @@ Where:
 
 1. **Upload an Image:**
    - Click **Upload Image** and select the desired image file.
+   - **Optional:** use the **Pre-Process** window to refine the image prior to correction.
+
+![Screenshot of Pre-Process Controls](Images/Screenshot7.png)
 
 2. **Apply Flat-Field Correction:**
    - Click **Apply Correction** to process the image. The corrected image will display on the right panel.
