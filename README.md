@@ -1,5 +1,7 @@
 # Advanced Flat Field Correction App
 
+## *READ: This app is still open for improvement, but author has created a more accurate and capable version using Python here:  (https://github.com/Sean-Ward034/Flat-Field-Correction-with-Python)*
+
 ![Screenshot of Cool Correction Placeholder](Images/Screenshot6.png)
 
 ## Overview
